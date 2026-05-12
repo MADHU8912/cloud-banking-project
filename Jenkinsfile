@@ -2,12 +2,12 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = nikhilabba12/cloud-banking"
+        IMAGE_NAME = "nikhilabba12/cloud-banking"
     }
 
     stages {
 
-        stage('Git Clone') {
+        stage('Clone Repository') {
             steps {
                 git 'https://github.com/MADHU8912/cloud-banking-project.git'
             }
@@ -21,7 +21,7 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                bat 'docker build -t %DOCKER_IMAGE% .'
+                bat 'docker build -t %IMAGE_NAME% .'
             }
         }
 
@@ -40,7 +40,7 @@ pipeline {
 
         stage('Docker Push') {
             steps {
-                bat 'docker push %DOCKER_IMAGE%'
+                bat 'docker push %IMAGE_NAME%'
             }
         }
 
@@ -49,7 +49,8 @@ pipeline {
                 bat '''
                 docker stop banking-container || exit 0
                 docker rm banking-container || exit 0
-                docker run -d -p 5000:5000 --name banking-container %DOCKER_IMAGE%
+
+                docker run -d -p 5005:5000 --name banking-container %IMAGE_NAME%
                 '''
             }
         }
